@@ -16,9 +16,9 @@ driver = webdriver.Chrome(options=chrome_options)
 driver.get("https://www.medica-tradefair.com/vis/v1/en/search?ticket=g_u_e_s_t&_query=&f_type=profile")
 time.sleep(1)
 max_pages = 315
-page_no = 47
+page_no = 94
 scroll_no = 0
-current_scroll_page = 48
+current_scroll_page = 95
 
 
 while page_no < max_pages:
@@ -47,7 +47,11 @@ while page_no < max_pages:
         #driver.execute_script("window.open('https://docs.google.com/forms/d/e/1FAIpQLSeABXtU62XVghsKuVzW-aGOazLQE4Rt-Ub8ZOkKbOosAOrTnw/viewform', '_blank');")
         #driver.switch_to.window(driver.window_handles[-1])
 
-        list_item = driver.find_element(By.XPATH, value=f"//*[@id='vis-search-scroll-area']/div[{page_no}]/div[{i}]/a/div/div[2]/div/h3")
+        wait = WebDriverWait(driver, 10)
+        list_item = wait.until(EC.presence_of_element_located(
+            (By.XPATH, f"//*[@id='vis-search-scroll-area']/div[{page_no}]/div[{i}]/a/div/div[2]/div/h3")))
+
+        # list_item = driver.find_element(By.XPATH, value=f"//*[@id='vis-search-scroll-area']/div[{page_no}]/div[{i}]/a/div/div[2]/div/h3")
         # list_item.click()
         action_chains = ActionChains(driver)
         action_chains.key_down(Keys.CONTROL).click(list_item).key_up(Keys.CONTROL).perform()
@@ -56,7 +60,11 @@ while page_no < max_pages:
         driver.switch_to.window(driver.window_handles[-1])
         time.sleep(2)
 
-        item_data = driver.find_element(By.XPATH, value="//*[@id='finder-profile']/div/div/section/div/div/div[2]/div[5]/button/div/span")
+        wait = WebDriverWait(driver, 10)
+        item_data = wait.until(EC.presence_of_element_located(
+            (By.XPATH, "//*[@id='finder-profile']/div/div/section/div/div/div[2]/div[5]/button/div/span")))
+
+        # item_data = driver.find_element(By.XPATH, value="//*[@id='finder-profile']/div/div/section/div/div/div[2]/div[5]/button/div/span")
 
         # button = driver.find_element_by_xpath("xpath")
         driver.execute_script("arguments[0].click();", item_data)
