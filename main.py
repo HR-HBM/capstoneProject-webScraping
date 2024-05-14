@@ -9,13 +9,16 @@ from selenium.webdriver.support import expected_conditions as EC
 
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_experimental_option("detach", True)
+# chrome_options.add_argument("--headless")
 
 driver = webdriver.Chrome(options=chrome_options)
 
 driver.get("https://www.medica-tradefair.com/vis/v1/en/search?ticket=g_u_e_s_t&_query=&f_type=profile")
 time.sleep(1)
 max_pages = 315
-page_no = 14
+page_no = 47
+scroll_no = 0
+current_scroll_page = 48
 
 
 while page_no < max_pages:
@@ -29,8 +32,8 @@ while page_no < max_pages:
     # driver.execute_script(scroll_script)
     #
     # time.sleep(2)
-    scroll_no = 0
-    while scroll_no < page_no + 1:
+
+    while scroll_no < current_scroll_page:
         scroll_no += 1
         body = driver.find_element(By.TAG_NAME, 'body')
         body.send_keys(Keys.END)
@@ -51,7 +54,7 @@ while page_no < max_pages:
 
         # Switch to the newly opened tab
         driver.switch_to.window(driver.window_handles[-1])
-        time.sleep(1)
+        time.sleep(2)
 
         item_data = driver.find_element(By.XPATH, value="//*[@id='finder-profile']/div/div/section/div/div/div[2]/div[5]/button/div/span")
 
@@ -149,6 +152,8 @@ while page_no < max_pages:
         time.sleep(1)
 
         print(f"page No. {page_no}")
+
+    current_scroll_page = 2
 
 
 
