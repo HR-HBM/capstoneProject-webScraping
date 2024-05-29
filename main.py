@@ -9,29 +9,20 @@ from selenium.webdriver.support import expected_conditions as EC
 
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_experimental_option("detach", True)
-# chrome_options.add_argument("--headless")
 
 driver = webdriver.Chrome(options=chrome_options)
 
 driver.get("https://www.medica-tradefair.com/vis/v1/en/search?ticket=g_u_e_s_t&_query=&f_type=profile")
 time.sleep(1)
 max_pages = 315
-page_no = 94
+page_no = 0
 scroll_no = 0
-current_scroll_page = 95
+current_scroll_page = 1
 
 
 while page_no < max_pages:
 
     page_no += 1
-
-    # Define the scroll script
-    # scroll_script = f"""
-    # window.scrollBy(0, 3600*(({page_no})-2));
-    # """
-    # driver.execute_script(scroll_script)
-    #
-    # time.sleep(2)
 
     while scroll_no < current_scroll_page:
         scroll_no += 1
@@ -39,20 +30,12 @@ while page_no < max_pages:
         body.send_keys(Keys.END)
         time.sleep(2)
 
-
-    # time.sleep(2)
-
     for i in range(1, 21):
-
-        #driver.execute_script("window.open('https://docs.google.com/forms/d/e/1FAIpQLSeABXtU62XVghsKuVzW-aGOazLQE4Rt-Ub8ZOkKbOosAOrTnw/viewform', '_blank');")
-        #driver.switch_to.window(driver.window_handles[-1])
 
         wait = WebDriverWait(driver, 10)
         list_item = wait.until(EC.presence_of_element_located(
             (By.XPATH, f"//*[@id='vis-search-scroll-area']/div[{page_no}]/div[{i}]/a/div/div[2]/div/h3")))
 
-        # list_item = driver.find_element(By.XPATH, value=f"//*[@id='vis-search-scroll-area']/div[{page_no}]/div[{i}]/a/div/div[2]/div/h3")
-        # list_item.click()
         action_chains = ActionChains(driver)
         action_chains.key_down(Keys.CONTROL).click(list_item).key_up(Keys.CONTROL).perform()
 
@@ -64,12 +47,8 @@ while page_no < max_pages:
         item_data = wait.until(EC.presence_of_element_located(
             (By.XPATH, "//*[@id='finder-profile']/div/div/section/div/div/div[2]/div[5]/button/div/span")))
 
-        # item_data = driver.find_element(By.XPATH, value="//*[@id='finder-profile']/div/div/section/div/div/div[2]/div[5]/button/div/span")
-
-        # button = driver.find_element_by_xpath("xpath")
         driver.execute_script("arguments[0].click();", item_data)
 
-        # item_data.click()
         time.sleep(2)
 
         name_text = ""
@@ -115,17 +94,11 @@ while page_no < max_pages:
         except:
             pass
 
-        # driver.close()
-        # driver.switch_to.window(driver.window_handles[0])
-
-
         #opening google form
         driver.execute_script("window.open('https://docs.google.com/forms/d/e/1FAIpQLSeABXtU62XVghsKuVzW-aGOazLQE4Rt-Ub8ZOkKbOosAOrTnw/viewform', '_blank');")
 
         # Switch to the Google Form tab
         driver.switch_to.window(driver.window_handles[-1])
-
-        # driver.get("https://docs.google.com/forms/d/e/1FAIpQLSeABXtU62XVghsKuVzW-aGOazLQE4Rt-Ub8ZOkKbOosAOrTnw/viewform")
 
         time.sleep(3)
 
@@ -147,7 +120,9 @@ while page_no < max_pages:
         company_website = driver.find_element(By.XPATH, value="//*[@id='mG61Hd']/div[2]/div/div[2]/div[6]/div/div/div[2]/div/div[1]/div/div[1]/input")
         company_website.send_keys(website_text)
 
-        submit = driver.find_element(By.XPATH, value="//*[@id='mG61Hd']/div[2]/div/div[3]/div[1]/div[1]/div")
+        submit = wait.until(EC.presence_of_element_located(
+            (By.XPATH, "//*[@id='mG61Hd']/div[2]/div/div[3]/div[1]/div[1]/div")))
+
         submit.send_keys(Keys.ENTER)
 
         driver.close()
